@@ -3,9 +3,16 @@ import React, { Suspense } from "react";
 
 import CabinList from "../components/CabinList";
 import Spinner from "../components/Spinner";
+
 export const metadata: Metadata = {
   title: "Cabins",
 };
+//  FOR CACHED ROUTE (NOT DATA)
+// revalidate on every fetch
+//export const revalidate = 0;
+
+//revalidate every hour
+export const revalidate = 3600;
 
 export default function Page() {
   return (
