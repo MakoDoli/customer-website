@@ -3,6 +3,7 @@ import React, { Suspense } from "react";
 
 import CabinList from "../components/CabinList";
 import Spinner from "../components/Spinner";
+import FIlter from "../components/FIlter";
 
 export const metadata: Metadata = {
   title: "Cabins",
@@ -10,11 +11,19 @@ export const metadata: Metadata = {
 //  FOR CACHED ROUTE (NOT DATA)
 // revalidate on every fetch
 //export const revalidate = 0;
+//  NO POINT OF REVALIDATE BECAUSE PAGE IS DYNAMIC BECAUSE OF SEARCHPARAMS
 
 //revalidate every hour
-export const revalidate = 3600;
+//export const revalidate = 3600;
 
-export default function Page() {
+export default function Page({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string };
+}) {
+  const filter = searchParams.capacity ?? "all";
+  console.log(filter);
+
   return (
     <div>
       <h1 className="text-4xl mb-5 text-accent-400 font-medium">
@@ -28,8 +37,11 @@ export default function Page() {
         home away from home. The perfect spot for a peaceful, calm vacation.
         Welcome to paradise.
       </p>
-      <Suspense fallback={<Spinner />}>
-        <CabinList />
+
+      <FIlter />
+
+      <Suspense fallback={<Spinner />} key={filter}>
+        <CabinList filter={filter} />
       </Suspense>
     </div>
   );
