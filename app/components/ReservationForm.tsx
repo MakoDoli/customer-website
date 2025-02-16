@@ -1,9 +1,12 @@
+"use client";
 import { CabinInfoType } from "../cabins/[cabinId]/page";
+import { useReservation } from "./ReservationContext";
 
 function ReservationForm({ cabin }: { cabin: CabinInfoType }) {
   // CHANGE
+  const { range } = useReservation();
   const maxCapacity = cabin.maxCapacity;
-
+  console.log(range);
   return (
     <div className="scale-[1.01] col-span-2">
       <div className="bg-primary-800 text-primary-300 px-16 py-2 flex justify-between items-center">
