@@ -1,3 +1,5 @@
+import { auth } from "@/app/_lib/auth";
+import { getBookings } from "@/app/_lib/data-service";
 import ReservationCard from "@/app/components/ReservationCard";
 import { Metadata } from "next";
 
@@ -9,9 +11,12 @@ type BookingsType<BookingT> = BookingT[] | [];
 type BookingType<T = Record<string, unknown>> = {
   id: number;
 } & T;
-export default function Page() {
+export default async function Page() {
   // CHANGE
-  const bookings: BookingsType<BookingType> = [];
+  const session = await auth();
+  const bookings: BookingsType<BookingType> = await getBookings(
+    session?.user.guestId
+  );
 
   return (
     <div>
