@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { auth, signIn, signOut } from "./auth";
 import { supabase } from "./supabase";
 import { getBookings } from "./data-service";
+import { redirect } from "next/navigation";
 
 export async function updateGuest(formData: FormData) {
   const session = await auth();
@@ -33,6 +34,39 @@ export async function updateGuest(formData: FormData) {
   return data;
 }
 
+export async function updateBooking(formData: FormData) {
+  const session = await auth();
+
+  if (!session) throw new Error("You must be logged in");
+
+  const bookingId = Number(formData.get("bookingId"));
+
+  const bookings = await getBookings(session.user.guestId);
+
+  const bookingIds = bookings.map((booking) => booking.id);
+  if (!bookingIds.includes(bookingId))
+    throw new Error("You can not update this reservation");
+
+  const updateData = {
+    numGuests: Number(formData.get("numGuests")),
+    observations: formData.get("Observations")?.slice(0, 1000),
+  };
+  const { data, error } = await supabase
+    .from("bookings")
+    .update(updateData)
+    .eq("id", bookingId)
+    .select()
+    .single();
+
+  if (error) {
+    console.error(error);
+    throw new Error("Booking could not be updated");
+  }
+
+  revalidatePath(`/account/reservations/edit/${bookingId}`);
+  redirect("/account/reservations");
+}
+
 export async function signInAction() {
   await signIn("google", { redirectTo: "/account" });
 }
@@ -54,6 +88,8 @@ export async function deleteReservationAction(bookingId: string) {
 
   if (!guestBookingIds.includes(bookingId))
     throw new Error("You can not delete this reservation");
+
+  // deleting from db
 
   const { error } = await supabase
     .from("bookings")
