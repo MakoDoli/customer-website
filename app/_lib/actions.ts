@@ -55,7 +55,7 @@ export async function deleteReservationAction(bookingId: string) {
   if (!guestBookingIds.includes(bookingId))
     throw new Error("You can not delete this reservation");
 
-  const { data, error } = await supabase
+  const { error } = await supabase
     .from("bookings")
     .delete()
     .eq("id", bookingId);
@@ -65,6 +65,5 @@ export async function deleteReservationAction(bookingId: string) {
     throw new Error("Booking could not be deleted");
   }
   revalidatePath("/account/reservations");
-  // actually we don't need data neither in await supabase nor in return
-  return data;
+  // actually we don't need data neither in (data, error} = await supabase nor in return
 }
