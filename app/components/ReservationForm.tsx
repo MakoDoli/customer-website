@@ -17,7 +17,7 @@ function ReservationForm({
 }) {
   // CHANGE
   const { range } = useReservation();
-  const maxCapacity = cabin.maxCapacity;
+  const { maxCapacity, regularPrice, discount } = cabin;
   console.log(range);
   return (
     <div className="scale-[1.01] col-span-2">

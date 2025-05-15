@@ -1,11 +1,17 @@
 "use client";
 import { TrashIcon } from "@heroicons/react/24/solid";
-import { deleteReservationAction } from "../_lib/actions";
+// import { deleteReservationAction } from "../_lib/actions";
 import { useTransition } from "react";
 import SpinnerMini from "./SpinnerMini";
 
-function DeleteReservation({ bookingId }: { bookingId: string }) {
-  // We can define server actions right in the component and use them both in the client and server components. For it to wor we need to use the "use server" directive
+function DeleteReservation({
+  bookingId,
+  onDelete,
+}: {
+  bookingId: string;
+  onDelete: (val: string) => void;
+}) {
+  // We can define server actions right in the component and use them both in the client and server components. For it to work we need to use the "use server" directive
 
   // function deleteReservation(id){
   //   "use server"
@@ -16,10 +22,16 @@ function DeleteReservation({ bookingId }: { bookingId: string }) {
 
   const [isPending, startTransition] = useTransition();
 
+  // function handleDelete() {
+  //   if (confirm("Are you sure you want to delete this reservation?"))
+  //     startTransition(() => deleteReservationAction(bookingId));
+  // }
+
   function handleDelete() {
     if (confirm("Are you sure you want to delete this reservation?"))
-      startTransition(() => deleteReservationAction(bookingId));
+      startTransition(() => onDelete(bookingId));
   }
+
   return (
     <button
       onClick={handleDelete}

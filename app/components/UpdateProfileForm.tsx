@@ -2,8 +2,9 @@
 "use client";
 import React, { ReactNode } from "react";
 import { updateGuest } from "../_lib/actions";
-import { useFormStatus } from "react-dom";
-import SpinnerMini from "./SpinnerMini";
+
+import SubmitButton from "./SubmitButton";
+
 type Props = {
   children: ReactNode;
   guest: {
@@ -66,20 +67,8 @@ export default function UpdateProfileForm({ guest, children }: Props) {
       </div>
 
       <div className="flex justify-end items-center gap-6">
-        <Button>Update profile</Button>
+        <SubmitButton>Update profile</SubmitButton>
       </div>
     </form>
-  );
-}
-
-function Button({ children }: { children: ReactNode }) {
-  const status = useFormStatus();
-  return (
-    <button
-      className="bg-accent-500 flex justify-center items-center w-48 text-primary-800 h-14 font-semibold hover:bg-accent-600 transition-all disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300"
-      disabled={status.pending}
-    >
-      {status.pending ? <SpinnerMini /> : children}
-    </button>
   );
 }
