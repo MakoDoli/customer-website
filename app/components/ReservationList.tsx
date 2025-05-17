@@ -6,13 +6,27 @@ import { deleteReservationAction } from "../_lib/actions";
 
 export type BookingsType<BookingT> = BookingT[] | [];
 
-type BookingType<T = Record<string, unknown>> = {
-  id: number;
-} & T;
+// type BookingType<T = Record<string, unknown>> = {
+//   id: number;
+// } & T;
+
+type Booking = {
+  id: string;
+  startDate: string | Date;
+  endDate: string | Date;
+  numNights: number;
+  totalPrice: number;
+  numGuests: number;
+  created_at: string | Date;
+  cabins: {
+    name: string;
+    image: string;
+  };
+};
 export default function ReservationList({
   bookings,
 }: {
-  bookings: BookingsType<BookingType>;
+  bookings: BookingsType<Booking>;
 }) {
   const [optimisticBookings, optimisticDelete] = useOptimistic(
     bookings,
@@ -27,7 +41,7 @@ export default function ReservationList({
   }
   return (
     <ul className="space-y-6">
-      {optimisticBookings.map((booking: BookingType) => (
+      {optimisticBookings.map((booking: Booking) => (
         <ReservationCard
           booking={booking}
           key={booking.id}
