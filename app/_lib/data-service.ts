@@ -64,7 +64,7 @@ export async function getGuest(email: string) {
 }
 
 export async function getBooking(id: string) {
-  const { data, error, count } = await supabase
+  const { data, error } = await supabase
     .from("bookings")
     .select("*")
     .eq("id", id)
@@ -79,7 +79,7 @@ export async function getBooking(id: string) {
 }
 
 export async function getBookings(guestId: number | string | undefined) {
-  const { data, error, count } = await supabase
+  const { data, error } = await supabase
     .from("bookings")
     // We actually also need data on the cabins as well. But let's ONLY take the data that we actually need, in order to reduce downloaded data.
     .select(
@@ -96,8 +96,8 @@ export async function getBookings(guestId: number | string | undefined) {
   return data;
 }
 
-export async function getBookedDatesByCabinId(cabinId) {
-  let today = new Date();
+export async function getBookedDatesByCabinId(cabinId: number) {
+  let today: Date | string = new Date();
   today.setUTCHours(0, 0, 0, 0);
   today = today.toISOString();
 
@@ -152,7 +152,12 @@ export async function getCountries() {
 /////////////
 // CREATE
 
-export async function createGuest(newGuest) {
+type NewGuest = {
+  fullName: string | undefined | null;
+  email: string | undefined | null;
+};
+
+export async function createGuest(newGuest: NewGuest) {
   const { data, error } = await supabase.from("guests").insert([newGuest]);
 
   if (error) {

@@ -51,7 +51,9 @@ export async function updateBooking(formData: FormData) {
     numGuests: Number(formData.get("numGuests")),
     observations: formData.get("Observations")?.slice(0, 1000),
   };
-  const { data, error } = await supabase
+
+  //const {data, error}= await supabase
+  const { error } = await supabase
     .from("bookings")
     .update(updateData)
     .eq("id", bookingId)
@@ -67,7 +69,18 @@ export async function updateBooking(formData: FormData) {
   redirect("/account/reservations");
 }
 
-export async function createBooking(bookingData, formData: FormData) {
+type BookingData = {
+  startDate: Date | undefined;
+  endDate: Date | undefined;
+  numNights: number;
+  cabinPrice: number;
+  cabinId: number;
+};
+
+export async function createBooking(
+  bookingData: BookingData,
+  formData: FormData
+) {
   const session = await auth();
   if (!session) throw new Error("You must be logged ind");
 

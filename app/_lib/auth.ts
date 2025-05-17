@@ -37,6 +37,7 @@ export const {
         return false;
       }
     },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async session({ session, user }) {
       const guest = await getGuest(session.user.email);
       session.user.guestId = guest.id;
