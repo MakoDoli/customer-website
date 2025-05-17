@@ -10,7 +10,7 @@ export async function GET(
   try {
     const [cabin, bookedDates] = await Promise.all([
       getCabin(cabinId),
-      getBookedDatesByCabinId(cabinId),
+      getBookedDatesByCabinId(Number(cabinId)),
     ]);
     return Response.json({ cabin, bookedDates });
   } catch {
