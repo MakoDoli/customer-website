@@ -1,6 +1,7 @@
 import { eachDayOfInterval } from "date-fns";
 import { supabase } from "./supabase";
 import { notFound } from "next/navigation";
+import { BookingsType } from "../components/ReservationList";
 
 /////////////
 // GET
@@ -93,7 +94,7 @@ export async function getBookings(guestId: number | string | undefined) {
     throw new Error("Bookings could not get loaded");
   }
 
-  return data;
+  return data as BookingsType;
 }
 
 export async function getBookedDatesByCabinId(cabinId: number) {

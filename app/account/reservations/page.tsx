@@ -1,22 +1,20 @@
 import { auth } from "@/app/_lib/auth";
 import { getBookings } from "@/app/_lib/data-service";
-import ReservationList from "@/app/components/ReservationList";
+import ReservationList, { Booking } from "@/app/components/ReservationList";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Reservations",
 };
-export type BookingsType<BookingT> = BookingT[] | [];
+export type BookingsType = Booking[] | [];
 
-type BookingType<T = Record<string, unknown>> = {
-  id: number;
-} & T;
+// type BookingType<T = Record<string, unknown>> = {
+//   id: number;
+// } & T;
 export default async function Page() {
   // CHANGE
   const session = await auth();
-  const bookings: BookingsType<BookingType> = await getBookings(
-    session?.user.guestId
-  );
+  const bookings = await getBookings(session?.user.guestId);
 
   return (
     <div>

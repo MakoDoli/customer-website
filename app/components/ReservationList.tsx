@@ -4,13 +4,11 @@ import React, { useOptimistic } from "react";
 import ReservationCard from "./ReservationCard";
 import { deleteReservationAction } from "../_lib/actions";
 
-export type BookingsType<BookingT> = BookingT[] | [];
 
-// type BookingType<T = Record<string, unknown>> = {
-//   id: number;
-// } & T;
 
-type Booking = {
+
+
+export type Booking = {
   id: string;
   startDate: string | Date;
   endDate: string | Date;
@@ -23,10 +21,11 @@ type Booking = {
     image: string;
   };
 };
+export type BookingsType = Booking[] | [];
 export default function ReservationList({
   bookings,
 }: {
-  bookings: BookingsType<Booking>;
+  bookings: BookingsType;
 }) {
   const [optimisticBookings, optimisticDelete] = useOptimistic(
     bookings,
