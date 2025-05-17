@@ -8,7 +8,8 @@ type Props = {
 };
 
 async function SelectCountry({ defaultCountry, name, id, className }: Props) {
-  const countries = await getCountries();
+  const countries = (await getCountries()) as { name: string; flag: string }[];
+
   const flag =
     countries.find((country) => country.name === defaultCountry)?.flag ?? "";
 

@@ -44,7 +44,7 @@ export async function updateBooking(formData: FormData) {
   const bookings = await getBookings(session.user.guestId);
 
   const bookingIds = bookings.map((booking) => booking.id);
-  if (!bookingIds.includes(bookingId))
+  if (!bookingIds.includes(String(bookingId)))
     throw new Error("You can not update this reservation");
 
   const updateData = {
