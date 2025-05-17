@@ -3,6 +3,9 @@
 import { User } from "next-auth";
 import { CabinInfoType } from "../cabins/[cabinId]/page";
 import { useReservation } from "./ReservationContext";
+import { createBooking } from "../_lib/actions";
+import { differenceInDays } from "date-fns";
+import SubmitButton from "./SubmitButton";
 
 // type User = {
 //   [key: string]: string;
@@ -16,8 +19,30 @@ function ReservationForm({
   user: User;
 }) {
   // CHANGE
-  const { range } = useReservation();
-  const { maxCapacity, regularPrice, discount } = cabin;
+  const { range, resetRange } = useReservation();
+  const { maxCapacity, regularPrice, discount, id } = cabin;
+
+  const startDate = range?.from;
+  const endDate = range?.to;
+
+  const numNights =
+    startDate && endDate ? differenceInDays(endDate, startDate) : 0;
+
+  const cabinPrice = regularPrice - discount;
+
+  const bookingData = {
+    startDate,
+    endDate,
+    numNights,
+    cabinPrice,
+    cabinId: id,
+  };
+
+  // in server action 'createBooking' first argument after bind
+  // will be bookingData and second argument will be formData because form is calling it in its 'action' attribute
+
+  const createBookingWithData = createBooking.bind(null, bookingData);
+
   console.log(range);
   return (
     <div className="scale-[1.01] col-span-2">
@@ -36,7 +61,14 @@ function ReservationForm({
         </div>
       </div>
 
-      <form className="bg-primary-900 py-10 px-16 text-lg flex gap-5 flex-col">
+      <form
+        //action={createBookingWithData}
+        action={async (formData) => {
+          await createBookingWithData(formData);
+          resetRange();
+        }}
+        className="bg-primary-900 py-10 px-16 text-lg flex gap-5 flex-col"
+      >
         <div className="space-y-2">
           <label htmlFor="numGuests">How many guests?</label>
           <select
@@ -69,11 +101,16 @@ function ReservationForm({
         </div>
 
         <div className="flex justify-end items-center gap-6">
-          <p className="text-primary-300 text-base">Start by selecting dates</p>
-
-          <button className="bg-accent-500 px-8 py-4 text-primary-800 font-semibold hover:bg-accent-600 transition-all disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300">
+          {!startDate && !endDate ? (
+            <p className="text-primary-300 text-base">
+              Start by selecting dates
+            </p>
+          ) : (
+            <SubmitButton>Reserve Now</SubmitButton>
+          )}
+          {/* <button className="bg-accent-500 px-8 py-4 text-primary-800 font-semibold hover:bg-accent-600 transition-all disabled:cursor-not-allowed disabled:bg-gray-500 disabled:text-gray-300">
             Reserve now
-          </button>
+          </button> */}
         </div>
       </form>
     </div>
